@@ -1,7 +1,15 @@
 services:
-  backend:
-      build:
-        context: ./backend
-        dockerfile: Dockerfile
-      ports:
-        - "8000:8000"
+  # backend:
+  #     build:
+  #       context: ./backend
+  #       dockerfile: Dockerfile
+  #     ports:
+  #       - "8000:8000"
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: pricing_feeds
+    ports:
+      - "5433:5432"
