@@ -1,2 +1,2 @@
 # pricing-feeds
-Upload and persist pricing feeds from retail stores using CSV files which contain Store ID, SKU, Product Name, Price, Date. Search for pricing records using various criteria and be able to edit/save changes to any record
+Single-page web application for uploading, persisting, searching, and editing retail pricing feeds (CSV: Store ID, SKU, Product Name, Price, Date)
