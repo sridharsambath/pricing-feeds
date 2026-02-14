@@ -1,10 +1,4 @@
 services:
-  # backend:
-  #     build:
-  #       context: ./backend
-  #       dockerfile: Dockerfile
-  #     ports:
-  #       - "8000:8000"
   db:
     image: postgres:16-alpine
     environment:
@@ -13,3 +7,24 @@ services:
       POSTGRES_DB: pricing_feeds
     ports:
       - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file: backend/.env
+
+volumes:
+  postgres_data:
