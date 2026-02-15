@@ -1,0 +1,27 @@
+header {
+  background: #1a1a2e;
+  color: #eee;
+  padding: 1rem 2rem;
+  margin-bottom: 1rem;
+}
+header h1 {
+  margin: 0.5rem 0 0;
+  font-size: 1.5rem;
+}
+nav {
+  display: flex;
+  gap: 1.5rem;
+}
+nav a {
+  color: #aaa;
+  text-decoration: none;
+}
+nav a:hover,
+nav a.active {
+  color: #fff;
+}
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
