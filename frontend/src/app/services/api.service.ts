@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+const API = '/api';
+
 export interface Product {
   id: number;
   store_id: string;
@@ -28,7 +30,6 @@ export interface ProductResponse {
   providedIn: 'root'
 })
 export class ApiService {
-  private apiUrl = 'http://127.0.0.1:8000/api';
 
   constructor(private http: HttpClient) { }
 
@@ -56,6 +57,10 @@ export class ApiService {
       params = params.set('country_code', filters.country_code);
     }
 
-    return this.http.get<ProductResponse>(`${this.apiUrl}/products`, { params });
+    return this.http.get<ProductResponse>(`${API}/products`, { params });
+  }
+
+  updateProduct(id: number, product: Partial<Product>): Observable<Product> {
+    return this.http.patch<Product>(`${API}/products/${id}`, product);
   }
 }

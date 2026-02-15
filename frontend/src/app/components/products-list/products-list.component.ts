@@ -30,6 +30,12 @@ export class ProductsListComponent implements OnInit {
     date_to: ''
   };
 
+  showEditModal = false;
+  editingProduct: Product | null = null;
+  editFormData: any = {};
+  saveLoading = false;
+  modifiedFields: Set<string> = new Set();
+
   constructor(private apiService: ApiService) { }
 
   ngOnInit(): void {
@@ -105,5 +111,56 @@ export class ProductsListComponent implements OnInit {
 
   get endItem(): number {
     return Math.min(this.currentPage * this.pageSize, this.totalItems);
+  }
+
+  openEditModal(product: Product): void {
+    this.editingProduct = product;
+    this.editFormData = { ...product };
+    this.modifiedFields.clear();
+    this.showEditModal = true;
+  }
+
+  closeEditModal(): void {
+    this.showEditModal = false;
+    this.editingProduct = null;
+    this.editFormData = {};
+    this.modifiedFields.clear();
+  }
+
+  onFieldBlur(fieldName: string): void {
+    this.modifiedFields.add(fieldName);
+  }
+
+  saveProduct(): void {
+    if (!this.editingProduct) return;
+    
+    this.saveLoading = true;
+    console.log('Saving product:', this.editingProduct.id, this.editFormData);
+    
+    // Create payload with only modified fields
+    const payload: any = {};
+    this.modifiedFields.forEach(field => {
+      payload[field] = this.editFormData[field];
+    });
+    
+    console.log('Payload with modified fields:', payload);
+    
+    this.apiService.updateProduct(this.editingProduct.id, payload)
+      .subscribe({
+        next: (response) => {
+          console.log('Product updated successfully');
+          const index = this.products.findIndex(p => p.id === response.id);
+          if (index !== -1) {
+            this.products[index] = response;
+          }
+          this.saveLoading = false;
+          this.closeEditModal();
+        },
+        error: (err) => {
+          console.error('Error updating product:', err);
+          this.error = 'Failed to update product.';
+          this.saveLoading = false;
+        }
+      });
   }
 }
