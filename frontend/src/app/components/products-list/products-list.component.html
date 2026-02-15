@@ -1,0 +1,161 @@
+<div class="products-container">
+  <h1>Products List</h1>
+
+  <!-- Search Filters -->
+  <div class="search-section">
+    <h2>Search & Filter</h2>
+    <div class="filter-grid">
+      <div class="filter-group">
+        <label for="product_name">Product Name:</label>
+        <input 
+          type="text" 
+          id="product_name" 
+          [(ngModel)]="productFilters.product_name"
+          placeholder="Search product name..."
+          class="filter-input"
+        />
+      </div>
+
+      <div class="filter-group">
+        <label for="store_id">Store ID:</label>
+        <input 
+          type="text" 
+          id="store_id" 
+          [(ngModel)]="productFilters.store_id"
+          placeholder="Filter by store ID..."
+          class="filter-input"
+        />
+      </div>
+
+      <div class="filter-group">
+        <label for="sku">SKU:</label>
+        <input 
+          type="text" 
+          id="sku" 
+          [(ngModel)]="productFilters.sku"
+          placeholder="Filter by SKU..."
+          class="filter-input"
+        />
+      </div>
+
+      <div class="filter-group">
+        <label for="country_code">Country Code:</label>
+        <input 
+          type="text" 
+          id="country_code" 
+          [(ngModel)]="productFilters.country_code"
+          placeholder="Filter by country..."
+          class="filter-input"
+        />
+      </div>
+
+      <div class="filter-group">
+        <label for="date_from">Start Date:</label>
+        <input 
+          type="date" 
+          id="date_from" 
+          [(ngModel)]="productFilters.date_from"
+          class="filter-input"
+        />
+      </div>
+
+      <div class="filter-group">
+        <label for="date_to">End Date:</label>
+        <input 
+          type="date" 
+          id="date_to" 
+          [(ngModel)]="productFilters.date_to"
+          class="filter-input"
+        />
+      </div>
+    </div>
+
+    <div class="button-group">
+      <button (click)="onSearch()" class="btn btn-primary">Search</button>
+      <button (click)="onClearFilters()" class="btn btn-secondary">Clear Filters</button>
+    </div>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading">
+    Loading products...
+  </div>
+
+  <!-- Products Table -->
+  <div *ngIf="!loading && products.length > 0" class="products-section">
+    <table class="products-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Store ID</th>
+          <th>SKU</th>
+          <th>Product Name</th>
+          <th>Price</th>
+          <th>Date</th>
+          <th>Country</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let product of products" class="product-row">
+          <td>{{ product.id }}</td>
+          <td>{{ product.store_id }}</td>
+          <td>{{ product.sku }}</td>
+          <td>{{ product.product_name }}</td>
+          <td>${{ product.price }}</td>
+          <td>{{ product.date | date: 'short' }}</td>
+          <td>{{ product.country_code }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- No Results -->
+  <div *ngIf="!loading && products.length === 0" class="no-results">
+    <p>No products found. Try adjusting your search filters.</p>
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="!loading && products.length > 0" class="pagination-section">
+    <div class="pagination-info">
+      Showing {{ startItem }} to {{ endItem }} of {{ totalItems }} results
+    </div>
+
+    <div class="pagination-controls">
+      <button 
+        (click)="previousPage()" 
+        [disabled]="currentPage === 1"
+        class="btn btn-sm"
+      >
+        Previous
+      </button>
+
+      <div class="page-numbers">
+        <button 
+          *ngFor="let page of [].constructor(totalPages); let i = index"
+          (click)="goToPage(i + 1)"
+          [class.active]="currentPage === i + 1"
+          class="page-btn"
+        >
+          {{ i + 1 }}
+        </button>
+      </div>
+
+      <button 
+        (click)="nextPage()" 
+        [disabled]="!hasMore"
+        class="btn btn-sm"
+      >
+        Next
+      </button>
+    </div>
+
+    <div class="pagination-info">
+      Page {{ currentPage }} of {{ totalPages }}
+    </div>
+  </div>
+</div>
