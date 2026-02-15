@@ -26,5 +26,14 @@ services:
         condition: service_healthy
     env_file: backend/.env
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    depends_on:
+      - backend
+    ports:
+      - "4200:80"
+
 volumes:
   postgres_data:
