@@ -26,6 +26,14 @@ export interface ProductResponse {
   pagination: PaginationInfo;
 }
 
+export interface UploadResponse {
+  accepted: number;
+  rejected: number;
+  total: number;
+  errors: string[];
+  upload_id: string | null;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -62,5 +70,11 @@ export class ApiService {
 
   updateProduct(id: number, product: Partial<Product>): Observable<Product> {
     return this.http.patch<Product>(`${API}/products/${id}`, product);
+  }
+
+  uploadFile(file: File): Observable<UploadResponse> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<UploadResponse>(`${API}/upload`, formData);
   }
 }

@@ -1,1 +1,58 @@
-<p>uploads works!</p>
+<div class="uploads-container">
+  <h1>Upload CSV File</h1>
+
+  <!-- Success Message -->
+  <div *ngIf="successMessage" class="message success-message">
+    {{ successMessage }}
+  </div>
+
+  <!-- Error Messages -->
+  <div *ngIf="errorMessages.length > 0" class="message error-message">
+    <p *ngFor="let error of errorMessages" class="error-item">• {{ error }}</p>
+  </div>
+
+  <!-- Upload Stats -->
+  <div *ngIf="uploadStats" class="upload-stats">
+    <div class="stat">
+      <span class="stat-label">Total:</span>
+      <span class="stat-value">{{ uploadStats.total }}</span>
+    </div>
+    <div class="stat">
+      <span class="stat-label">Accepted:</span>
+      <span class="stat-value accepted">{{ uploadStats.accepted }}</span>
+    </div>
+    <div class="stat">
+      <span class="stat-label">Rejected:</span>
+      <span class="stat-value rejected">{{ uploadStats.rejected }}</span>
+    </div>
+  </div>
+
+  <!-- Upload Section -->
+  <div class="upload-section">
+    <div class="file-input-wrapper">
+      <input 
+        type="file" 
+        id="file-input"
+        accept=".csv"
+        (change)="onFileSelected($event)"
+        class="file-input"
+      />
+      <label for="file-input" class="file-label">
+        Choose CSV File
+      </label>
+    </div>
+
+    <div class="selected-file" *ngIf="selectedFile">
+      <p>Selected: <strong>{{ selectedFile.name }}</strong></p>
+    </div>
+
+    <button 
+      (click)="uploadFile()" 
+      [disabled]="!selectedFile || loading"
+      class="btn btn-primary"
+    >
+      {{ loading ? 'Uploading...' : 'Upload' }}
+    </button>
+  </div>
+</div>
+
